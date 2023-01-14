@@ -27,8 +27,18 @@ const findShortest = (arr = []) => {
     return res;
  };
 
-function tour(start, end, counter = 0) {
-    if (counter > 6) return;
+function arrayChecker(array, cell) {
+    let a = JSON.stringify(array);
+    let b = JSON.stringify(cell);
+    let c = a.indexOf(b);
+    if (c != -1) {
+        return true;
+    }
+}
+
+function tour(start, end, counter = 0, visited = []) {
+    if (arrayChecker(visited, start)) return;
+    visited.push(start);
     if (start[0] === end[0] && start[1] === end[1]) {
         console.log(true);
         return true;
@@ -36,55 +46,51 @@ function tour(start, end, counter = 0) {
     let potentialMoves = [];
     potentialMoves = createPossibilities(start);
     // console.log(potentialMoves);
-    let shortestPossibilities = [];
     // for (cell of potentialMoves) {
     //     console.log(cell);
     //     possibilities.push(createPossibilities(cell));
     // }
-    shortestPossibilities = findShortest(potentialMoves);
     // console.log(shortestPossibilities);
-    for (cell of shortestPossibilities) {
-        if (tour(cell, end, ++counter) === true) return;
-        tour(cell, end, ++counter)
+    for (cell of potentialMoves) {
+        if (tour(cell, end, ++counter, visited) === true) return true;
     }
     // console.log(buildTree(potentialMoves, 0, potentialMoves.length - 1));
-
 }
 
 createChessBoard(chessBoard);
 
-tour([0,0], [1,2]);
+console.log(tour([0,0], [4,4]));
 
-function nodeCreate (d) {
-    return {
-        data: d,
-        left: null,
-        right: null,
-    }
-}
+// function nodeCreate (d) {
+//     return {
+//         data: d,
+//         left: null,
+//         right: null,
+//     }
+// }
 
-function sortTree(array) {
-    for (element of array) {
-        let elementIndexes = [];
-        for (let i = 0; i < array.length; i++) {
-            if (array[i] === element) (elementIndexes.push(i));
-        }
-        if (elementIndexes.length > 1) {
-            elementIndexes.shift();
-            for (index of elementIndexes) {
-                array.splice(index, 1);
-            }
-        }
-    }
-    array.sort(function(a, b) {return a - b});
-    return array;
-}
+// function sortTree(array) {
+//     for (element of array) {
+//         let elementIndexes = [];
+//         for (let i = 0; i < array.length; i++) {
+//             if (array[i] === element) (elementIndexes.push(i));
+//         }
+//         if (elementIndexes.length > 1) {
+//             elementIndexes.shift();
+//             for (index of elementIndexes) {
+//                 array.splice(index, 1);
+//             }
+//         }
+//     }
+//     array.sort(function(a, b) {return a - b});
+//     return array;
+// }
 
-function buildTree (array, start, end) {
-    if (start > end) return null;
-    let mid = Math.floor((start + end) / 2);
-    let node = nodeCreate(array[mid]);
-    node.left = buildTree(array, start, mid - 1);
-    node.right = buildTree(array, mid + 1, end);
-    return node;
-}
+// function buildTree (array, start, end) {
+//     if (start > end) return null;
+//     let mid = Math.floor((start + end) / 2);
+//     let node = nodeCreate(array[mid]);
+//     node.left = buildTree(array, start, mid - 1);
+//     node.right = buildTree(array, mid + 1, end);
+//     return node;
+// }
