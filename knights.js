@@ -7,21 +7,53 @@ function createChessBoard(array) {
     }
 }
 
-function tour([a, b], [c, d]) {
-    if (a === c && b === d) return true;
-    let potentialMoves = [[a-1, b-2], [a-2, b-1], [a+1, b+2], [a+2, b+1], [a+2, b-1], [a-1, b+2], [a-2, b+1], [a+1, b-2]];
+function createPossibilities(start) {
+    let potentialMoves = [[start[0]-1, start[1]-2], [start[0]-2, start[1]-1], [start[0]+1, start[1]+2], [start[0]+2, start[1]+1], [start[0]+2, start[1]-1], [start[0]-1, start[1]+2], [start[0]-2, start[1]+1], [start[0]+1, start[1]-2]];
     potentialMoves = potentialMoves.filter(move => move[0] > -1 && move[1] > -1 && move[0] < 8 && move[1] < 8);
-    potentialMoves = sortTree(potentialMoves);
-    console.log(potentialMoves);
-    // for (cell of potentialMoves) {
+    // potentialMoves = sortTree(potentialMoves);
+    return potentialMoves;
+}
 
+const findShortest = (arr = []) => {
+    const res = arr.reduce((acc, val, ind) => {
+       if (!ind || val.length < acc[0].length) {
+          return [val];
+       };
+       if (val.length === acc[0].length) {
+          acc.push(val);
+       };
+       return acc;
+    }, []);
+    return res;
+ };
+
+function tour(start, end, counter = 0) {
+    if (counter > 6) return;
+    if (start[0] === end[0] && start[1] === end[1]) {
+        console.log(true);
+        return true;
+    }
+    let potentialMoves = [];
+    potentialMoves = createPossibilities(start);
+    // console.log(potentialMoves);
+    let shortestPossibilities = [];
+    // for (cell of potentialMoves) {
+    //     console.log(cell);
+    //     possibilities.push(createPossibilities(cell));
     // }
-    console.log(buildTree(potentialMoves, 0, potentialMoves.length - 1));
+    shortestPossibilities = findShortest(potentialMoves);
+    // console.log(shortestPossibilities);
+    for (cell of shortestPossibilities) {
+        if (tour(cell, end, ++counter) === true) return;
+        tour(cell, end, ++counter)
+    }
+    // console.log(buildTree(potentialMoves, 0, potentialMoves.length - 1));
+
 }
 
 createChessBoard(chessBoard);
 
-tour([5,5], [1,1]);
+tour([0,0], [1,2]);
 
 function nodeCreate (d) {
     return {
